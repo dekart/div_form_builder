@@ -43,16 +43,23 @@ Move your fields to a separate partial:
     <%= form.fields "path/to/custom/partial" %>
   <% end %>
 
+Set custom label (human_attribute_name is used by default) or disable label at all:
+
+  <% form_for @post do |form| %>
+    <%= form.text_field :title, :required => true, :label => "Post Title" %>
+    <%= form.text_area  :content, :label => false %>
+  <% end %>
+
 Add something before and after input wrapper:
 
   <% form_for @post do |form| %>
-    <%= form.text_area  :content, :before_field => "Some text", :after_field => "Other text" %>
+    <%= form.text_area :content, :before_field => "Some text", :after_field => "Other text" %>
   <% end %>
 
 Add comment:
 
   <% form_for @post do |form| %>
-    <%= form.text_area  :content, :comment => "Some comment" %>
+    <%= form.text_area :content, :comment => "Some comment" %>
   <% end %>
 
 Display previous field values:
@@ -64,7 +71,7 @@ Display previous field values:
 Disable field wrapper:
 
   <% form_for @post do |form| %>
-    <%= form.text_area  :content, :wrapper => false %>
+    <%= form.text_area :content, :wrapper => false %>
   <% end %>
 
 
