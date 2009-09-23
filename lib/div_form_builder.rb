@@ -55,7 +55,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
 
   def submit(*args)
     options = args.extract_options!
-    text = args.any? ? args.first : @template.t(".submit")
+    text = args.any? ? args.first : @template.t(".submit", :default => @template.t("form_builder.submit"))
 
     options.reverse_merge!(:field_type => :submit)
 
