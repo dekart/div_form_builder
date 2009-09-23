@@ -28,7 +28,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
   def grouped_select(field_name, choices, options = {}, html_options = {}, &block)
     options.reverse_merge!(:field_type => :group_select)
 
-    field(field_name, 
+    field(field_name,
       @template.grouped_select(@object_name, field_name, choices,
         objectify_options(options.except(*CUSTOM_OPTIONS)),
         @default_options.merge(html_options)
@@ -39,7 +39,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
 
   def radio_button(field_name, choises, options = {}, &block)
     code = ""
-    
+
     choises.each do |choise|
       code << div(
         div(super(field_name, choise[1], options.except(*CUSTOM_OPTIONS)), :class => :option_input) +
@@ -78,7 +78,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
 
   def field(field_name, field, options = {}, &block)
     code = ""
-    
+
     field_changes = object.changes[field_name.to_s]
 
     detect_field_order(options[:order] || options[:field_type]).each do |part|
@@ -105,7 +105,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
         when :previous_value
           if @options[:show_changes] && field_changes
             div(
-              @template.content_tag(:span, @template.t("form_builder.previous_value"), :class => :label) + 
+              @template.content_tag(:span, @template.t("form_builder.previous_value"), :class => :label) +
               " " +
               @template.content_tag(:span, field_changes.first, :class => :value),
               :class => :previous_value
@@ -127,7 +127,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
       :class  => field_classes.compact.uniq.join(" "),
       :id     => options[:id] || ("field_for_#{@object_name}_#{field_name}" unless field_name.blank?)
     ) unless options[:wrapper] == false
-    
+
     block_given? ? @template.concat(code) : code
   end
 
@@ -153,7 +153,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
 
   def detect_field_order(value)
     return FIELD_ORDER[:default] unless value
-    
+
     value.is_a?(Array) ? value : (FIELD_ORDER[value.to_sym] || FIELD_ORDER[:default])
   end
 end
