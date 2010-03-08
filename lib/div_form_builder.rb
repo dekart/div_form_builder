@@ -7,7 +7,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
 
   CUSTOM_OPTIONS = [:label, :required, :comment, :before_field, :after_field, :field_type, :wrapper]
 
-  (field_helpers + %w(date_select datetime_select) - %w(hidden_field)).each do |selector|
+  (field_helpers + %w(date_select datetime_select) - %w(hidden_field fields_for)).each do |selector|
     src = <<-END_SRC
       def #{selector}(field_name, options = {}, &block)
         options.reverse_merge!(:field_type => :#{selector})
@@ -43,7 +43,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
     choises.each do |choise|
       code << div(
         div(super(field_name, choise[1], options.except(*CUSTOM_OPTIONS)), :class => :option_input) +
-        div(choise[0], :class => :option_label),
+        div(label(choise[0], "#{field_name}_#{choise[1]}"), :class => :option_label),
         :class => :option
       )
     end
@@ -79,7 +79,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
   def field(field_name, field, options = {}, &block)
     code = ""
 
-    field_changes = object.changes[field_name.to_s]
+    field_changes = object.respond_to?(:changes) ? object.changes[field_name.to_s] : nil
 
     detect_field_order(options[:order] || options[:field_type]).each do |part|
       code << (
@@ -88,7 +88,7 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
           div(
             label(
               options[:label].blank? ? object.class.human_attribute_name(field_name.to_s) : options[:label],
-              "#{@object_name}_#{field_name}"
+              field_name
             ),
             :class => :label
           ) unless options[:label] == false
@@ -147,8 +147,8 @@ class DivFormBuilder < ActionView::Helpers::FormBuilder
     @template.content_tag(:div, content, options)
   end
 
-  def label(text, for_field)
-    @template.content_tag(:label, text, :for => for_field)
+  def label(text, field_name)
+    @template.content_tag(:label, text, :for => "#{@object_name}_#{field_name}")
   end
 
   def detect_field_order(value)
